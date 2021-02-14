@@ -21,7 +21,7 @@
         <spring.boot.version>2.4.2</spring.boot.version>
         <springfox-swagger.version>2.9.2</springfox-swagger.version>
         <commons-io.version>2.6</commons-io.version>
-        <orika.version>1.5.1</orika.version>
+        <orika.version>1.5.4</orika.version>
         <jackson.version>2.12.1</jackson.version>
     </properties>
 

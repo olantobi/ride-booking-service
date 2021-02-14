@@ -1,19 +1,21 @@
 package mt.com.ecabs.booking.producer.config;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 @Component
+@Slf4j
 public class BoostrapSetup implements CommandLineRunner {
     private final AmqpAdmin amqpAdmin;
     private final RabbitMqConfig rabbitMqConfig;
 
     @Override
     public void run(String... args) throws Exception {
-        System.out.println("Creating exchanges and queues and bindings");
+        log.info("Creating exchanges, queues and bindings");
 
         amqpAdmin.declareExchange(rabbitMqConfig.messageExchange());
         amqpAdmin.declareExchange(rabbitMqConfig.bookingExchange());
