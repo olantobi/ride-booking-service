@@ -41,11 +41,21 @@ public class Booking extends TimestampedEntity {
 
     private int rating;
 
-    @OneToMany(mappedBy="booking", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="booking", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TripWayPoint> tripWayPoints;
 
     public void setPickupTime(String pickupTime) {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
         this.pickupTime = LocalDateTime.parse(pickupTime, dateTimeFormatter);
+    }
+
+    public void addTripWayPoint(TripWayPoint tripWayPoint) {
+        tripWayPoints.add(tripWayPoint);
+        tripWayPoint.setBooking(this);
+    }
+
+    public void removeTripWayPoint(TripWayPoint tripWayPoint) {
+        tripWayPoints.remove(tripWayPoint);
+        tripWayPoint.setBooking(null);
     }
 }

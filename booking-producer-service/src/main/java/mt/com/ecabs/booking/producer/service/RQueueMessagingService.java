@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class RQueueMessagingService implements MessagingService {
 
-    private final AmqpTemplate amqpTemplate;
+    private final AmqpTemplate rabbitTemplate;
     private final ExchangeProperties exchangeProperties;
     private final RoutingKeyProperties routingKeyProperties;
 
@@ -20,6 +20,6 @@ public class RQueueMessagingService implements MessagingService {
     public void sendMessage(MessageWrapper<BookingDto> message) {
         String routingKey = message.getOperation().name().toLowerCase() + "." + routingKeyProperties.getSuffix();
 
-        amqpTemplate.convertAndSend(exchangeProperties.getMessageExchange(), routingKey, message);
+        rabbitTemplate.convertAndSend(exchangeProperties.getMessageExchange(), routingKey, message);
     }
 }

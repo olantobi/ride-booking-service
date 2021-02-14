@@ -1,11 +1,16 @@
 package mt.com.ecabs.booking.consumer.utils;
 
+import ma.glasnost.orika.CustomMapper;
 import ma.glasnost.orika.MapperFactory;
+import ma.glasnost.orika.MappingContext;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
 import mt.com.ecabs.booking.consumer.model.Booking;
+import mt.com.ecabs.booking.consumer.model.TripWayPoint;
 import mt.com.ecabs.booking.dto.BookingDto;
+import mt.com.ecabs.booking.dto.TripWayPointDto;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -13,10 +18,20 @@ public class OrikaUtils {
 
     private static MapperFactory getMapperFactory() {
         MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
+
         mapperFactory.classMap(BookingDto.class, Booking.class)
-                .fieldAToB("pickupTime", "pickupTime")
                 .byDefault()
-                .register();
+                .customize(new CustomMapper<BookingDto, Booking>() {
+                    @Override
+                    public void mapAtoB(BookingDto bookingDto, Booking booking, MappingContext context) {
+                        booking.setPickupTime(bookingDto.getPickupTime());
+
+                        booking.setTripWayPoints(new ArrayList<>());
+                        for (TripWayPointDto tripWayPointDto : bookingDto.getTripWayPoints()) {
+                            booking.addTripWayPoint(map(tripWayPointDto, TripWayPoint.class));
+                        }
+                    }
+                }).register();
         return mapperFactory;
     }
 

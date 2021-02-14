@@ -1,12 +1,10 @@
 package mt.com.ecabs.booking.consumer.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import javax.persistence.*;
 
-@Getter
-@Setter
+@Data
 @Entity
 @Table(name = "trip_way_points")
 public class TripWayPoint {
@@ -21,7 +19,6 @@ public class TripWayPoint {
 
     private double longitude;
 
-    @ManyToOne
-    @JoinColumn(name = "booking_id")
+    @ManyToOne(fetch = FetchType.LAZY)
     private Booking booking;
 }

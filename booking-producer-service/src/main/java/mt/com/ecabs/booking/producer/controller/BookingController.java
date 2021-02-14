@@ -75,38 +75,4 @@ public class BookingController {
                 .message("Booking has been deleted")
                 .build();
     }
-
-//    @ApiOperation("Get all bookings.")
-//    @ApiResponses({
-//            @ApiResponse(code = 200, message = "Booking created", response = ApiResponseDto.class),
-//            @ApiResponse(code = 400, message = "<li>Error if any of the mandatory fields were not filled.</li>" +
-//                    "<li>Error if the demand is greater than available resources.</li>", response = ApiResponseDto.class)
-//    })
-//    @GetMapping
-//    public ApiResponseDto<?> getBookings() {
-//        List<BookingDto> allBookings = bookingService.getAllBookings();
-//
-//        return ApiResponseDto.<List<BookingDto>>builder()
-//                .data(allBookings)
-//                .successful(true)
-//                .message("Bookings retrieved successfully")
-//                .build();
-//    }
-//
-//    @ApiOperation("Get a booking")
-//    @ApiResponses({
-//            @ApiResponse(code = 200, message = "Booking retrieved", response = ApiResponseDto.class),
-//            @ApiResponse(code = 400, message = "<li>Error if any of the mandatory fields were not filled.</li>" +
-//                    "<li>Error if the demand is greater than available resources.</li>", response = ApiResponseDto.class)
-//    })
-//    @GetMapping("/{id}")
-//    public ApiResponseDto<?> getBooking(@PathVariable("id") long bookingId) {
-//        BookingDto bookingDto = bookingService.getBooking(bookingId);
-//
-//        return ApiResponseDto.<BookingDto>builder()
-//                .data(bookingDto)
-//                .successful(true)
-//                .message("Booking retrieved successfully")
-//                .build();
-//    }
 }
