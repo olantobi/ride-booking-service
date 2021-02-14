@@ -2,6 +2,8 @@ package mt.com.ecabs.booking.consumer.utils;
 
 import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
+import mt.com.ecabs.booking.consumer.model.Booking;
+import mt.com.ecabs.booking.dto.BookingDto;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
@@ -11,8 +13,8 @@ public class OrikaUtils {
 
     private static MapperFactory getMapperFactory() {
         MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
-        mapperFactory.classMap(AllocatedIpAddress.class, AllocatedIpResponseDto.class)
-                .fieldAToB("ipPool.id", "ipPoolId")
+        mapperFactory.classMap(BookingDto.class, Booking.class)
+                .fieldAToB("pickupTime", "pickupTime")
                 .byDefault()
                 .register();
         return mapperFactory;

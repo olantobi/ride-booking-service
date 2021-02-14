@@ -1,6 +1,6 @@
 package mt.com.ecabs.booking.producer.exception;
 
-import mt.com.ecabs.booking.dto.ErrorDto;
+import mt.com.ecabs.booking.producer.dto.ApiResponseDto;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,13 +22,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(RuntimeException.class)
-    public ErrorDto handle(final RuntimeException exception) {
-        return new ErrorDto(exception.getMessage());
+    public ApiResponseDto<?> handle(final RuntimeException exception) {
+        return ApiResponseDto.builder()
+                .message(exception.getMessage())
+                .successful(false).build();
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MissingRequestHeaderException.class)
-    public ErrorDto handle(final MissingRequestHeaderException exception) {
-        return new ErrorDto(exception.getMessage());
+    public ApiResponseDto<?> handle(final MissingRequestHeaderException exception) {
+        return ApiResponseDto.builder()
+                .message(exception.getMessage())
+                .successful(false).build();
     }
 }

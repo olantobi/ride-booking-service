@@ -1,0 +1,33 @@
+spring:
+  rabbitmq:
+    addresses: localhost:5672
+    username: guest
+    password: guest
+    virtual-host: /
+    host: localhost
+    port: 5672
+    ssl:
+      enabled: false
+    listener:
+      simple:
+        default-requeue-rejected: false
+        retry:
+          enabled: true
+        acknowledge-mode: auto
+rabbitmq:
+  exchanges:
+    message-exchange: message-exchange
+    booking-exchange: booking-exchange
+  queues:
+    booking-add-queue: booking-add-queue
+    booking-edit-queue: booking-edit-queue
+    booking-delete-queue: booking-delete-queue
+    message-audit-queue: message-audit-queue
+  routing-keys:
+    suffix: "booking.trans"
+    add-booking: "add.#"
+    edit-booking: "edit.#"
+    delete-booking: "delete.#"
+    message-audit: "#.trans"
+    booking-exchange: "*.booking.*"
+

@@ -5,18 +5,19 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import mt.com.ecabs.booking.dto.BookingDto;
+import mt.com.ecabs.booking.dto.MessageWrapper;
+import mt.com.ecabs.booking.dto.Operation;
 import mt.com.ecabs.booking.producer.dto.ApiResponseDto;
-import mt.com.ecabs.booking.producer.service.BookingService;
+import mt.com.ecabs.booking.producer.service.MessagingService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RequestMapping("/api/v1/booking")
 @RestController
 @RequiredArgsConstructor
 public class BookingController {
-    private final BookingService bookingService;
+    private final MessagingService messagingService;
 
     @ApiOperation("Creates a new booking.")
     @ApiResponses({
@@ -26,7 +27,10 @@ public class BookingController {
     })
     @PostMapping
     public ApiResponseDto<?> createBooking(final @Valid @RequestBody BookingDto booking) {
-        bookingService.createBooking(booking);
+        messagingService.sendMessage(MessageWrapper.<BookingDto>builder()
+                .operation(Operation.ADD)
+                .message(booking)
+                .build());
 
         return ApiResponseDto.builder()
                 .successful(true)
@@ -41,8 +45,13 @@ public class BookingController {
                     "<li>Error if the demand is greater than available resources.</li>", response = ApiResponseDto.class)
     })
     @PutMapping("/{id}")
-    public ApiResponseDto<?> editBooking(final @Valid @RequestBody BookingDto booking) {
-        bookingService.createBooking(booking);
+    public ApiResponseDto<?> editBooking(@PathVariable("id") long bookingId, final @Valid @RequestBody BookingDto bookingDto) {
+        bookingDto.setId(bookingId);
+
+        messagingService.sendMessage(MessageWrapper.<BookingDto>builder()
+                .operation(Operation.EDIT)
+                .message(bookingDto)
+                .build());
 
         return ApiResponseDto.builder()
                 .successful(true)
@@ -56,7 +65,10 @@ public class BookingController {
     })
     @DeleteMapping("/{id}")
     public ApiResponseDto<?> deleteBooking(@PathVariable("id") long bookingId) {
-        bookingService.deleteBooking(bookingId);
+        messagingService.sendMessage(MessageWrapper.<BookingDto>builder()
+                .operation(Operation.DELETE)
+                .message(BookingDto.builder().id(bookingId).build())
+                .build());
 
         return ApiResponseDto.builder()
                 .successful(true)
@@ -64,37 +76,37 @@ public class BookingController {
                 .build();
     }
 
-    @ApiOperation("Get all bookings.")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "Booking created", response = ApiResponseDto.class),
-            @ApiResponse(code = 400, message = "<li>Error if any of the mandatory fields were not filled.</li>" +
-                    "<li>Error if the demand is greater than available resources.</li>", response = ApiResponseDto.class)
-    })
-    @GetMapping
-    public ApiResponseDto<?> getBookings() {
-        List<BookingDto> allBookings = bookingService.getAllBookings();
-
-        return ApiResponseDto.<List<BookingDto>>builder()
-                .data(allBookings)
-                .successful(true)
-                .message("Bookings retrieved successfully")
-                .build();
-    }
-
-    @ApiOperation("Get a booking")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "Booking retrieved", response = ApiResponseDto.class),
-            @ApiResponse(code = 400, message = "<li>Error if any of the mandatory fields were not filled.</li>" +
-                    "<li>Error if the demand is greater than available resources.</li>", response = ApiResponseDto.class)
-    })
-    @GetMapping("/{id")
-    public ApiResponseDto<?> getBooking(@PathVariable("id") long bookingId) {
-        BookingDto bookingDto = bookingService.getBooking(bookingId);
-
-        return ApiResponseDto.<BookingDto>builder()
-                .data(bookingDto)
-                .successful(true)
-                .message("Booking retrieved successfully")
-                .build();
-    }
+//    @ApiOperation("Get all bookings.")
+//    @ApiResponses({
+//            @ApiResponse(code = 200, message = "Booking created", response = ApiResponseDto.class),
+//            @ApiResponse(code = 400, message = "<li>Error if any of the mandatory fields were not filled.</li>" +
+//                    "<li>Error if the demand is greater than available resources.</li>", response = ApiResponseDto.class)
+//    })
+//    @GetMapping
+//    public ApiResponseDto<?> getBookings() {
+//        List<BookingDto> allBookings = bookingService.getAllBookings();
+//
+//        return ApiResponseDto.<List<BookingDto>>builder()
+//                .data(allBookings)
+//                .successful(true)
+//                .message("Bookings retrieved successfully")
+//                .build();
+//    }
+//
+//    @ApiOperation("Get a booking")
+//    @ApiResponses({
+//            @ApiResponse(code = 200, message = "Booking retrieved", response = ApiResponseDto.class),
+//            @ApiResponse(code = 400, message = "<li>Error if any of the mandatory fields were not filled.</li>" +
+//                    "<li>Error if the demand is greater than available resources.</li>", response = ApiResponseDto.class)
+//    })
+//    @GetMapping("/{id}")
+//    public ApiResponseDto<?> getBooking(@PathVariable("id") long bookingId) {
+//        BookingDto bookingDto = bookingService.getBooking(bookingId);
+//
+//        return ApiResponseDto.<BookingDto>builder()
+//                .data(bookingDto)
+//                .successful(true)
+//                .message("Booking retrieved successfully")
+//                .build();
+//    }
 }

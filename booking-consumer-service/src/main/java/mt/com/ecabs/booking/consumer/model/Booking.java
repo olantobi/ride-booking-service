@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Getter
@@ -12,6 +13,8 @@ import java.util.List;
 @Entity
 @Table(name = "bookings")
 public class Booking extends TimestampedEntity {
+    private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
@@ -40,4 +43,9 @@ public class Booking extends TimestampedEntity {
 
     @OneToMany(mappedBy="booking", cascade = CascadeType.ALL)
     private List<TripWayPoint> tripWayPoints;
+
+    public void setPickupTime(String pickupTime) {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
+        this.pickupTime = LocalDateTime.parse(pickupTime, dateTimeFormatter);
+    }
 }
